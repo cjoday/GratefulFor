@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GratefulFor - Where Deadheads Meet AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 60px 20px 40px;
+        }
+
+        .logo {
+            font-size: 4rem;
+            font-weight: bold;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+            animation: pulse 3s ease-in-out infinite;
+            background: linear-gradient(45deg, #ff6b6b, #feca57, #48dbfb, #ff9ff3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .tagline {
+            font-size: 1.5rem;
+            margin-top: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            font-style: italic;
+        }
+
+        .hero {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 50px;
+            margin: 40px 0;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .hero h2 {
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 50px 0;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .feature-card p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .quote {
+            text-align: center;
+            font-size: 1.8rem;
+            font-style: italic;
+            margin: 60px 0;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            border-left: 5px solid #feca57;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .cta {
+            text-align: center;
+            margin: 60px 0;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 20px 50px;
+            font-size: 1.5rem;
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .cta-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+
+        .skull {
+            display: inline-block;
+            animation: spin 20s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 2.5rem;
+            }
+
+            .tagline {
+                font-size: 1.2rem;
+            }
+
+            .hero {
+                padding: 30px 20px;
+            }
+
+            .hero h2 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="logo">GratefulFor</h1>
+            <p class="tagline">Where the Grateful Dead Spirit Meets the Future of AI</p>
+        </header>
+
+        <section class="hero">
+            <h2><span class="skull">☠️</span> Welcome, Fellow Travelers <span class="skull">☠️</span></h2>
+            <p>
+                The music never stopped, and now it's evolving. GratefulFor is a cosmic junction where Deadheads gather to share their experiences, celebrate the music, and explore the magic of artificial intelligence.
+            </p>
+            <p>
+                From legendary shows at the Fillmore to AI-generated setlists, from tales of Jerry's guitar solos to neural networks that understand the groove - this is where past, present, and future harmonize.
+            </p>
+            <p>
+                What a long, strange trip it's been... and it's about to get even more interesting.
+            </p>
+        </section>
+
+        <section class="features">
+            <div class="feature-card">
+                <div class="feature-icon">🎸</div>
+                <h3>Share Your Stories</h3>
+                <p>
+                    Connect with fellow Deadheads and share your concert experiences, favorite shows, and magical moments from the scene.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🎵</div>
+                <h3>Explore the Music</h3>
+                <p>
+                    Dive deep into the vast catalog of shows, songs, and improvisations that made the Grateful Dead legendary.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🤖</div>
+                <h3>AI Magic</h3>
+                <p>
+                    Discover how artificial intelligence can help preserve, analyze, and even create new experiences inspired by the Dead's legacy.
+                </p>
+            </div>
+        </section>
+
+        <div class="quote">
+            "Once in a while you get shown the light in the strangest of places if you look at it right."
+            <br>
+            <small>- Robert Hunter</small>
+        </div>
+
+        <section class="hero">
+            <h2>The Journey Ahead</h2>
+            <p>
+                Imagine AI that can recommend the perfect Dark Star for your mood. Picture neural networks trained on decades of live recordings, understanding the ebb and flow of improvisation. Envision a community where the pioneering spirit of the Dead meets the limitless potential of machine learning.
+            </p>
+            <p>
+                This isn't about replacing the magic - it's about amplifying it, preserving it, and passing it on to future generations in ways we never imagined possible.
+            </p>
+        </section>
+
+        <div class="cta">
+            <a href="#" class="cta-button">Join the Family</a>
+        </div>
+
+        <footer>
+            <p>⚡ Keep on truckin' ⚡</p>
+            <p>Made with love for the music and the community</p>
+        </footer>
+    </div>
+</body>
+</html>
