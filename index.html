@@ -314,24 +314,12 @@
 
         <section class="history-section">
             <div class="history-content">
-                <p class="history-date">📅 October 28</p>
+                <p class="history-date" id="history-date">📅 Loading...</p>
                 <h2 class="history-title">On Today's Date in Grateful Dead History</h2>
 
-                <div class="history-feature">
-                    <h3>🎸 Cornell 5/8/77 - "Scarlet Begonias > Fire on the Mountain"</h3>
-                    <p>
-                        On May 8, 1977, at Barton Hall, Cornell University, the Grateful Dead delivered what many consider to be the greatest "Scarlet Begonias > Fire on the Mountain" transition ever performed. The seamless 26-minute journey showcases the band at their absolute peak.
-                    </p>
-                    <p>
-                        Jerry's guitar work is transcendent, weaving intricate melodies that dance between the songs. The transition is so smooth, you can barely tell where Scarlet ends and Fire begins. Phil's bass grounds the cosmic exploration while the dual drummers create a rhythmic foundation that propels the jam to unprecedented heights.
-                    </p>
-
-                    <div class="history-why">
-                        <h4>✨ Why This Performance?</h4>
-                        <p>
-                            The Cornell '77 show is often called the best Grateful Dead show ever, and this transition is the crown jewel. It represents everything magical about the Dead's improvisational prowess - the telepathic communication between band members, the perfect balance of structure and freedom, and the ability to take the audience on a transformative journey. This performance has inspired countless musicians and remains a pilgrimage destination for Deadheads exploring the band's vast catalog.
-                        </p>
-                    </div>
+                <div class="history-feature" id="history-feature">
+                    <h3>🎸 Loading today's Grateful Dead history...</h3>
+                    <p>Please wait while we load today's featured content.</p>
                 </div>
             </div>
         </section>
@@ -387,5 +375,64 @@
             <p>Made with love for the music and the community</p>
         </footer>
     </div>
+
+    <script>
+        // Function to load and display today's Grateful Dead history
+        async function loadTodaysHistory() {
+            try {
+                // Get today's date in MM-DD format
+                const today = new Date();
+                const month = String(today.getMonth() + 1).padStart(2, '0');
+                const day = String(today.getDate()).padStart(2, '0');
+                const dateKey = `${month}-${day}`;
+
+                // Fetch the history data
+                const response = await fetch('dead-history.json');
+                const historyData = await response.json();
+
+                // Get today's content or a random one if today doesn't exist
+                let todayContent = historyData[dateKey];
+
+                // If no content for today, pick a random date
+                if (!todayContent) {
+                    const allDates = Object.keys(historyData);
+                    const randomDate = allDates[Math.floor(Math.random() * allDates.length)];
+                    todayContent = historyData[randomDate];
+                }
+
+                // Update the date display
+                document.getElementById('history-date').textContent = `📅 ${todayContent.date}`;
+
+                // Build the description paragraphs
+                const descriptionHTML = todayContent.description
+                    .map(paragraph => `<p>${paragraph}</p>`)
+                    .join('');
+
+                // Build the complete feature HTML
+                const featureHTML = `
+                    <h3>${todayContent.icon} ${todayContent.title}</h3>
+                    ${descriptionHTML}
+                    <div class="history-why">
+                        <h4>✨ Why This ${todayContent.title.includes('Show') || todayContent.title.includes('October') || todayContent.title.includes('March') || todayContent.title.includes('June') ? 'Show' : 'Moment'}?</h4>
+                        <p>${todayContent.why}</p>
+                    </div>
+                `;
+
+                // Update the feature content
+                document.getElementById('history-feature').innerHTML = featureHTML;
+
+            } catch (error) {
+                console.error('Error loading history:', error);
+                document.getElementById('history-feature').innerHTML = `
+                    <h3>🎸 Grateful Dead History</h3>
+                    <p>We're having trouble loading today's featured content. Please check back later!</p>
+                    <p>In the meantime, remember: "Once in a while you get shown the light in the strangest of places if you look at it right."</p>
+                `;
+            }
+        }
+
+        // Load the content when the page loads
+        document.addEventListener('DOMContentLoaded', loadTodaysHistory);
+    </script>
 </body>
 </html>
