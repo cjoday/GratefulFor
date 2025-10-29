@@ -314,24 +314,12 @@
 
         <section class="history-section">
             <div class="history-content">
-                <p class="history-date">📅 October 29</p>
+                <p class="history-date" id="history-date">📅 Loading...</p>
                 <h2 class="history-title">On Today's Date in Grateful Dead History</h2>
 
-                <div class="history-feature">
-                    <h3>🎸 October 29, 1977 - Evans Field House, Northern Illinois University, DeKalb, IL</h3>
-                    <p>
-                        Deep in the heart of the legendary Fall '77 tour, the Grateful Dead rolled into DeKalb, Illinois and delivered a performance that would be celebrated for decades. This show captures the band at their absolute peak - relaxed, confident, and locked into a groove that few eras could match.
-                    </p>
-                    <p>
-                        The evening opens with "Might as Well" and flows through stellar versions of "Jack Straw" and "Dire Wolf." But it's the first set closer, "Let It Grow," that really announces this as a special night - Jerry's solos cascade over Phil's thunderous bass bombs while the dual drummers propel the jam into the stratosphere. The second set takes things even higher, with the band engaging the audience in ways rarely heard in the late '70s.
-                    </p>
-
-                    <div class="history-why">
-                        <h4>✨ Why This Show?</h4>
-                        <p>
-                            This performance was deemed significant enough to be released as Dave's Picks Volume 33 in 2020, over 40 years after it was played. Fall 1977 is considered by many to be the Dead's finest era - the perfect balance of their loose, exploratory early years and their more polished, powerful sound of the '80s. The DeKalb show exemplifies everything that made this tour legendary: impeccable musicianship, fearless improvisation, and a band so in sync they moved as one organism. This is the Grateful Dead at their most alive.
-                        </p>
-                    </div>
+                <div class="history-feature" id="history-feature">
+                    <h3>🎸 Loading today's Grateful Dead history...</h3>
+                    <p>Please wait while we load today's featured content.</p>
                 </div>
             </div>
         </section>
@@ -387,5 +375,64 @@
             <p>Made with love for the music and the community</p>
         </footer>
     </div>
+
+    <script>
+        // Function to load and display today's Grateful Dead history
+        async function loadTodaysHistory() {
+            try {
+                // Get today's date in MM-DD format
+                const today = new Date();
+                const month = String(today.getMonth() + 1).padStart(2, '0');
+                const day = String(today.getDate()).padStart(2, '0');
+                const dateKey = `${month}-${day}`;
+
+                // Fetch the history data
+                const response = await fetch('dead-history.json');
+                const historyData = await response.json();
+
+                // Get today's content or a random one if today doesn't exist
+                let todayContent = historyData[dateKey];
+
+                // If no content for today, pick a random date
+                if (!todayContent) {
+                    const allDates = Object.keys(historyData);
+                    const randomDate = allDates[Math.floor(Math.random() * allDates.length)];
+                    todayContent = historyData[randomDate];
+                }
+
+                // Update the date display
+                document.getElementById('history-date').textContent = `📅 ${todayContent.date}`;
+
+                // Build the description paragraphs
+                const descriptionHTML = todayContent.description
+                    .map(paragraph => `<p>${paragraph}</p>`)
+                    .join('');
+
+                // Build the complete feature HTML
+                const featureHTML = `
+                    <h3>${todayContent.icon} ${todayContent.title}</h3>
+                    ${descriptionHTML}
+                    <div class="history-why">
+                        <h4>✨ Why This ${todayContent.title.includes('Show') || todayContent.title.includes('October') || todayContent.title.includes('March') || todayContent.title.includes('June') ? 'Show' : 'Moment'}?</h4>
+                        <p>${todayContent.why}</p>
+                    </div>
+                `;
+
+                // Update the feature content
+                document.getElementById('history-feature').innerHTML = featureHTML;
+
+            } catch (error) {
+                console.error('Error loading history:', error);
+                document.getElementById('history-feature').innerHTML = `
+                    <h3>🎸 Grateful Dead History</h3>
+                    <p>We're having trouble loading today's featured content. Please check back later!</p>
+                    <p>In the meantime, remember: "Once in a while you get shown the light in the strangest of places if you look at it right."</p>
+                `;
+            }
+        }
+
+        // Load the content when the page loads
+        document.addEventListener('DOMContentLoaded', loadTodaysHistory);
+    </script>
 </body>
 </html>
