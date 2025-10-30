@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Grateful for the Dead - Where Deadheads Meet AI</title>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
     <style>
         * {
             margin: 0;
@@ -290,6 +296,258 @@
                 font-size: 2rem;
             }
         }
+
+        /* User Stories Section */
+        .user-stories-section {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 40px 0;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            border: 2px solid rgba(255, 107, 107, 0.6);
+        }
+
+        .user-stories-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .user-stories-header h2 {
+            font-size: 2rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .auth-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            backdrop-filter: blur(5px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid #feca57;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 2rem;
+            cursor: pointer;
+            color: white;
+            transition: transform 0.2s;
+        }
+
+        .modal-close:hover {
+            transform: scale(1.2);
+        }
+
+        .modal h2 {
+            margin-bottom: 25px;
+            text-align: center;
+            font-size: 2rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+            font-family: 'Courier New', monospace;
+            color: #333;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .google-signin-btn {
+            width: 100%;
+            padding: 15px;
+            background: white;
+            color: #333;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .google-signin-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+        }
+
+        .story-card {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border-left: 4px solid #ff6b6b;
+            backdrop-filter: blur(5px);
+        }
+
+        .story-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .story-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            border: 2px solid #feca57;
+        }
+
+        .story-author {
+            font-weight: bold;
+            color: #feca57;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .story-date {
+            font-size: 0.9rem;
+            color: #ccc;
+            margin-left: auto;
+        }
+
+        .story-title {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: #fff;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .story-content {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #fff;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .no-stories {
+            text-align: center;
+            padding: 40px;
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 768px) {
+            .user-stories-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .auth-controls {
+                justify-content: center;
+            }
+        }
     </style>
 </head>
 <body>
@@ -323,6 +581,65 @@
                 </div>
             </div>
         </section>
+
+        <!-- User Stories Section -->
+        <section class="user-stories-section">
+            <div class="user-stories-header">
+                <h2>🎸 Share Your Stories</h2>
+                <div class="auth-controls">
+                    <div id="user-info" class="user-info" style="display: none;">
+                        <img id="user-avatar" class="user-avatar" src="" alt="User avatar">
+                        <span id="user-name">Loading...</span>
+                        <button id="add-story-btn" class="btn btn-primary">Add Your Story</button>
+                        <button id="signout-btn" class="btn btn-secondary">Sign Out</button>
+                    </div>
+                    <div id="auth-prompt" style="display: none;">
+                        <button id="signin-btn" class="btn btn-primary">Sign In to Share</button>
+                    </div>
+                </div>
+            </div>
+            <div id="stories-container" class="loading">
+                <p>Loading stories...</p>
+            </div>
+        </section>
+
+        <!-- Authentication Modal -->
+        <div id="auth-modal" class="modal">
+            <div class="modal-content">
+                <span class="modal-close" id="auth-modal-close">&times;</span>
+                <h2>🎵 Join the Family</h2>
+                <p style="text-align: center; margin-bottom: 20px;">Sign in to share your Grateful Dead stories and experiences</p>
+                <button id="google-signin" class="google-signin-btn">
+                    <svg width="24" height="24" viewBox="0 0 24 24">
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                    </svg>
+                    Sign in with Google
+                </button>
+            </div>
+        </div>
+
+        <!-- Add Story Modal -->
+        <div id="story-modal" class="modal">
+            <div class="modal-content">
+                <span class="modal-close" id="story-modal-close">&times;</span>
+                <h2>✨ Share Your Story</h2>
+                <p style="text-align: center; margin-bottom: 20px;">Tell us about your experience related to today's Grateful Dead history</p>
+                <form id="story-form">
+                    <div class="form-group">
+                        <label for="story-title">Story Title</label>
+                        <input type="text" id="story-title" name="title" required maxlength="100" placeholder="e.g., I was there at Cornell '77!">
+                    </div>
+                    <div class="form-group">
+                        <label for="story-content">Your Story</label>
+                        <textarea id="story-content" name="content" required maxlength="1000" placeholder="Share your memories, experiences, or thoughts about this moment in Grateful Dead history..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Share Story</button>
+                </form>
+            </div>
+        </div>
 
         <section class="features">
             <div class="feature-card">
@@ -377,6 +694,27 @@
     </div>
 
     <script>
+        // Firebase Configuration - REPLACE WITH YOUR OWN FIREBASE CONFIG
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        // Initialize Firebase
+        let auth, db, currentUser = null, currentDateKey = null;
+
+        try {
+            firebase.initializeApp(firebaseConfig);
+            auth = firebase.auth();
+            db = firebase.firestore();
+        } catch (error) {
+            console.error('Firebase initialization error:', error);
+        }
+
         // Function to load and display today's Grateful Dead history
         async function loadTodaysHistory() {
             try {
@@ -384,20 +722,21 @@
                 const today = new Date();
                 const month = String(today.getMonth() + 1).padStart(2, '0');
                 const day = String(today.getDate()).padStart(2, '0');
-                const dateKey = `${month}-${day}`;
+                currentDateKey = `${month}-${day}`;
 
                 // Fetch the history data
                 const response = await fetch('dead-history.json');
                 const historyData = await response.json();
 
                 // Get today's content or a random one if today doesn't exist
-                let todayContent = historyData[dateKey];
+                let todayContent = historyData[currentDateKey];
 
                 // If no content for today, pick a random date
                 if (!todayContent) {
                     const allDates = Object.keys(historyData);
                     const randomDate = allDates[Math.floor(Math.random() * allDates.length)];
                     todayContent = historyData[randomDate];
+                    currentDateKey = randomDate;
                 }
 
                 // Update the date display
@@ -421,6 +760,9 @@
                 // Update the feature content
                 document.getElementById('history-feature').innerHTML = featureHTML;
 
+                // Load user stories for this date
+                loadUserStories();
+
             } catch (error) {
                 console.error('Error loading history:', error);
                 document.getElementById('history-feature').innerHTML = `
@@ -431,8 +773,210 @@
             }
         }
 
-        // Load the content when the page loads
-        document.addEventListener('DOMContentLoaded', loadTodaysHistory);
+        // Authentication State Observer
+        function initAuth() {
+            if (!auth) {
+                document.getElementById('auth-prompt').style.display = 'block';
+                document.getElementById('stories-container').innerHTML = '<div class="no-stories"><p>⚠️ Firebase not configured. Please add your Firebase credentials to enable user stories.</p></div>';
+                return;
+            }
+
+            auth.onAuthStateChanged((user) => {
+                currentUser = user;
+                if (user) {
+                    // User is signed in
+                    document.getElementById('user-info').style.display = 'flex';
+                    document.getElementById('auth-prompt').style.display = 'none';
+                    document.getElementById('user-name').textContent = user.displayName || 'Deadhead';
+                    document.getElementById('user-avatar').src = user.photoURL || 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"><circle cx="20" cy="20" r="20" fill="%23feca57"/><text x="20" y="28" text-anchor="middle" fill="white" font-size="20" font-family="Arial">☮</text></svg>';
+                    loadUserStories();
+                } else {
+                    // User is signed out
+                    document.getElementById('user-info').style.display = 'none';
+                    document.getElementById('auth-prompt').style.display = 'block';
+                    loadUserStories();
+                }
+            });
+        }
+
+        // Sign in with Google
+        function signInWithGoogle() {
+            if (!auth) {
+                alert('Firebase is not configured. Please add your Firebase credentials.');
+                return;
+            }
+            const provider = new firebase.auth.GoogleAuthProvider();
+            auth.signInWithPopup(provider)
+                .then((result) => {
+                    closeModal('auth-modal');
+                })
+                .catch((error) => {
+                    console.error('Sign in error:', error);
+                    alert('Sign in failed: ' + error.message);
+                });
+        }
+
+        // Sign out
+        function signOut() {
+            if (!auth) return;
+            auth.signOut().then(() => {
+                console.log('User signed out');
+            }).catch((error) => {
+                console.error('Sign out error:', error);
+            });
+        }
+
+        // Load user stories for today's date
+        async function loadUserStories() {
+            const container = document.getElementById('stories-container');
+
+            if (!db || !currentDateKey) {
+                container.innerHTML = '<div class="no-stories"><p>Loading stories...</p></div>';
+                return;
+            }
+
+            try {
+                const storiesRef = db.collection('stories');
+                const querySnapshot = await storiesRef
+                    .where('dateKey', '==', currentDateKey)
+                    .orderBy('createdAt', 'desc')
+                    .limit(50)
+                    .get();
+
+                if (querySnapshot.empty) {
+                    container.innerHTML = `
+                        <div class="no-stories">
+                            <p>🎵 No stories yet for this date in Grateful Dead history.</p>
+                            ${currentUser ? '<p>Be the first to share your story!</p>' : '<p>Sign in to be the first to share a story!</p>'}
+                        </div>
+                    `;
+                    return;
+                }
+
+                let storiesHTML = '';
+                querySnapshot.forEach((doc) => {
+                    const story = doc.data();
+                    const date = story.createdAt ? new Date(story.createdAt.toDate()).toLocaleDateString() : 'Unknown date';
+                    storiesHTML += `
+                        <div class="story-card">
+                            <div class="story-header">
+                                <img src="${story.userPhoto || 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="35" height="35"><circle cx="17.5" cy="17.5" r="17.5" fill="%23feca57"/><text x="17.5" y="24" text-anchor="middle" fill="white" font-size="18" font-family="Arial">☮</text></svg>'}" alt="${story.userName}" class="story-avatar">
+                                <span class="story-author">${story.userName || 'Anonymous Deadhead'}</span>
+                                <span class="story-date">${date}</span>
+                            </div>
+                            <h3 class="story-title">${escapeHtml(story.title)}</h3>
+                            <p class="story-content">${escapeHtml(story.content)}</p>
+                        </div>
+                    `;
+                });
+
+                container.innerHTML = storiesHTML;
+
+            } catch (error) {
+                console.error('Error loading stories:', error);
+                container.innerHTML = `
+                    <div class="no-stories">
+                        <p>⚠️ Error loading stories. ${error.message}</p>
+                        <p>Make sure Firestore is properly configured with the correct indexes.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Submit a new story
+        async function submitStory(event) {
+            event.preventDefault();
+
+            if (!currentUser) {
+                alert('Please sign in to share your story');
+                return;
+            }
+
+            if (!db || !currentDateKey) {
+                alert('Database not initialized');
+                return;
+            }
+
+            const title = document.getElementById('story-title').value.trim();
+            const content = document.getElementById('story-content').value.trim();
+
+            if (!title || !content) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            try {
+                await db.collection('stories').add({
+                    dateKey: currentDateKey,
+                    title: title,
+                    content: content,
+                    userId: currentUser.uid,
+                    userName: currentUser.displayName || 'Anonymous Deadhead',
+                    userPhoto: currentUser.photoURL || '',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                // Close modal and reset form
+                closeModal('story-modal');
+                document.getElementById('story-form').reset();
+
+                // Reload stories
+                loadUserStories();
+
+                alert('🎸 Story shared successfully!');
+
+            } catch (error) {
+                console.error('Error submitting story:', error);
+                alert('Failed to submit story: ' + error.message);
+            }
+        }
+
+        // Utility function to escape HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Modal functions
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load today's history
+            loadTodaysHistory();
+
+            // Initialize auth
+            initAuth();
+
+            // Modal close buttons
+            document.getElementById('auth-modal-close').addEventListener('click', () => closeModal('auth-modal'));
+            document.getElementById('story-modal-close').addEventListener('click', () => closeModal('story-modal'));
+
+            // Click outside modal to close
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        closeModal(modal.id);
+                    }
+                });
+            });
+
+            // Auth buttons
+            document.getElementById('signin-btn').addEventListener('click', () => openModal('auth-modal'));
+            document.getElementById('google-signin').addEventListener('click', signInWithGoogle);
+            document.getElementById('signout-btn').addEventListener('click', signOut);
+
+            // Story buttons
+            document.getElementById('add-story-btn').addEventListener('click', () => openModal('story-modal'));
+            document.getElementById('story-form').addEventListener('submit', submitStory);
+        });
     </script>
 </body>
 </html>
