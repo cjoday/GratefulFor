@@ -273,6 +273,117 @@
             line-height: 1.6;
         }
 
+        .ai-magic-section {
+            background: rgba(72, 219, 251, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+            border: 2px solid rgba(72, 219, 251, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ai-magic-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent,
+                rgba(72, 219, 251, 0.1),
+                transparent
+            );
+            animation: shimmer 4s infinite;
+        }
+
+        .ai-magic-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .ai-magic-section h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: #48dbfb;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .ai-image-container {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            text-align: center;
+        }
+
+        .ai-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+            margin: 15px 0;
+        }
+
+        .ai-placeholder {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            background-size: 200% 200%;
+            animation: gradientShift 8s ease infinite;
+            border-radius: 10px;
+            padding: 60px 20px;
+            margin: 15px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 300px;
+        }
+
+        .ai-placeholder-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .ai-prompt-display {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #48dbfb;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            text-align: left;
+        }
+
+        .ai-prompt-label {
+            color: #48dbfb;
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .ai-demo-notice {
+            background: rgba(254, 202, 87, 0.2);
+            padding: 12px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #feca57;
+            font-size: 0.9rem;
+        }
+
+        .ai-demo-notice strong {
+            color: #feca57;
+        }
+
+        .ai-loading {
+            display: inline-block;
+            animation: spin 2s linear infinite;
+        }
+
         @media (max-width: 768px) {
             .logo {
                 font-size: 2.5rem;
@@ -320,6 +431,15 @@
                 <div class="history-feature" id="history-feature">
                     <h3>🎸 Loading today's Grateful Dead history...</h3>
                     <p>Please wait while we load today's featured content.</p>
+                </div>
+
+                <div class="ai-magic-section" id="ai-magic-section" style="display: none;">
+                    <div class="ai-magic-content">
+                        <h3>🤖 AI-Generated Image of the Day</h3>
+                        <div id="ai-image-content">
+                            <!-- AI-generated image will be inserted here -->
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -377,6 +497,175 @@
     </div>
 
     <script>
+        // ========================================
+        // AI IMAGE GENERATION CONFIGURATION
+        // ========================================
+
+        // DEMO MODE: Set to false and add your API key below to enable real image generation
+        const DEMO_MODE = true;
+
+        // To use OpenAI DALL-E (recommended for beginners):
+        // 1. Sign up at https://platform.openai.com/
+        // 2. Get API key from https://platform.openai.com/api-keys
+        // 3. New accounts get $5 free credit
+        // 4. Set DEMO_MODE = false and add your key below
+        const OPENAI_API_KEY = '';  // Add your API key here
+
+        // ========================================
+        // IMAGE PROMPT GENERATION
+        // ========================================
+
+        /**
+         * Generates an intelligent AI image prompt from history content
+         * @param {Object} historyContent - The history data for today
+         * @returns {string} A detailed prompt for AI image generation
+         */
+        function generateImagePrompt(historyContent) {
+            // Extract key information
+            const title = historyContent.title;
+            const description = historyContent.description.join(' ');
+            const date = historyContent.date;
+
+            // Create a detailed, artistic prompt
+            const prompt = `A psychedelic art poster in the style of 1960s-70s rock concert posters, depicting ${title}.
+Include vibrant, swirling colors (purple, orange, blue, pink) with a vintage aesthetic.
+The scene should capture the energy and spirit of a Grateful Dead concert with dancing skeletons,
+roses, and cosmic elements. Retro typography and a dreamy, mystical atmosphere.
+Style: vintage concert poster art, psychedelic rock aesthetic, Grateful Dead imagery.
+Mood: groovy, nostalgic, cosmic, energetic. Date reference: ${date}.`;
+
+            return prompt.trim();
+        }
+
+        // ========================================
+        // IMAGE GENERATION (DEMO MODE & REAL API)
+        // ========================================
+
+        /**
+         * Generates or simulates generating an image based on the prompt
+         * @param {string} prompt - The image generation prompt
+         * @returns {Promise<Object>} Image data including URL and metadata
+         */
+        async function generateHistoryImage(prompt) {
+            if (DEMO_MODE) {
+                // DEMO MODE: Show what would be generated
+                return {
+                    success: true,
+                    mode: 'demo',
+                    prompt: prompt,
+                    message: 'Demo mode active - showing prompt preview'
+                };
+            }
+
+            // REAL API MODE: Generate actual image with OpenAI DALL-E
+            try {
+                if (!OPENAI_API_KEY || OPENAI_API_KEY === '') {
+                    throw new Error('API key not configured');
+                }
+
+                const response = await fetch('https://api.openai.com/v1/images/generations', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${OPENAI_API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        model: 'dall-e-3',
+                        prompt: prompt,
+                        n: 1,
+                        size: '1024x1024',
+                        quality: 'standard',
+                        style: 'vivid'
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API request failed: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                return {
+                    success: true,
+                    mode: 'real',
+                    imageUrl: data.data[0].url,
+                    prompt: prompt
+                };
+
+            } catch (error) {
+                console.error('Error generating image:', error);
+                return {
+                    success: false,
+                    mode: 'error',
+                    error: error.message,
+                    prompt: prompt
+                };
+            }
+        }
+
+        // ========================================
+        // DISPLAY GENERATED IMAGE
+        // ========================================
+
+        /**
+         * Displays the generated image or demo placeholder in the UI
+         * @param {Object} imageData - The image data from generateHistoryImage()
+         */
+        function displayGeneratedImage(imageData) {
+            const container = document.getElementById('ai-image-content');
+            const section = document.getElementById('ai-magic-section');
+
+            if (imageData.mode === 'demo') {
+                // DEMO MODE: Show prompt preview
+                container.innerHTML = `
+                    <div class="ai-placeholder">
+                        <div class="ai-placeholder-icon">🎨✨</div>
+                        <h4 style="margin-bottom: 15px; font-size: 1.5rem;">Demo Mode Active</h4>
+                        <p style="max-width: 600px; margin: 0 auto;">This is where your AI-generated image would appear!</p>
+                    </div>
+                    <div class="ai-prompt-display">
+                        <span class="ai-prompt-label">🤖 AI Prompt Generated:</span>
+                        <p style="margin: 0; color: #fff;">${imageData.prompt}</p>
+                    </div>
+                    <div class="ai-demo-notice">
+                        <strong>💡 How to enable real image generation:</strong><br>
+                        1. Sign up for OpenAI API at <a href="https://platform.openai.com/" target="_blank" style="color: #48dbfb;">platform.openai.com</a> (new accounts get $5 free credit)<br>
+                        2. Get your API key from the API keys section<br>
+                        3. Open <code>index.html</code> and set <code>DEMO_MODE = false</code><br>
+                        4. Add your API key to <code>OPENAI_API_KEY</code><br>
+                        5. Refresh the page to see real AI-generated images!
+                    </div>
+                `;
+            } else if (imageData.mode === 'real' && imageData.success) {
+                // REAL MODE: Show generated image
+                container.innerHTML = `
+                    <div class="ai-image-container">
+                        <img src="${imageData.imageUrl}" alt="AI-generated Grateful Dead artwork" class="ai-image">
+                    </div>
+                    <div class="ai-prompt-display">
+                        <span class="ai-prompt-label">🤖 Generated from prompt:</span>
+                        <p style="margin: 0; color: #fff;">${imageData.prompt}</p>
+                    </div>
+                `;
+            } else {
+                // ERROR MODE: Show error message
+                container.innerHTML = `
+                    <div class="ai-demo-notice">
+                        <strong>⚠️ Image generation failed:</strong><br>
+                        ${imageData.error || 'Unknown error occurred'}<br><br>
+                        Please check your API key configuration and try again.
+                    </div>
+                `;
+            }
+
+            // Show the AI magic section
+            section.style.display = 'block';
+        }
+
+        // ========================================
+        // LOAD TODAY'S HISTORY (UPDATED)
+        // ========================================
+
         // Function to load and display today's Grateful Dead history
         async function loadTodaysHistory() {
             try {
@@ -420,6 +709,16 @@
 
                 // Update the feature content
                 document.getElementById('history-feature').innerHTML = featureHTML;
+
+                // Generate and display AI image based on today's history
+                try {
+                    const imagePrompt = generateImagePrompt(todayContent);
+                    const imageData = await generateHistoryImage(imagePrompt);
+                    displayGeneratedImage(imageData);
+                } catch (imageError) {
+                    console.error('Error with AI image generation:', imageError);
+                    // Don't show error to user - just skip the image section
+                }
 
             } catch (error) {
                 console.error('Error loading history:', error);
