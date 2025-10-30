@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Grateful for the Dead - Where Deadheads Meet AI</title>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
     <style>
         * {
             margin: 0;
@@ -290,6 +296,258 @@
                 font-size: 2rem;
             }
         }
+
+        /* User Stories Section */
+        .user-stories-section {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 40px 0;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            border: 2px solid rgba(255, 107, 107, 0.6);
+        }
+
+        .user-stories-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .user-stories-header h2 {
+            font-size: 2rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .auth-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            backdrop-filter: blur(5px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid #feca57;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 2rem;
+            cursor: pointer;
+            color: white;
+            transition: transform 0.2s;
+        }
+
+        .modal-close:hover {
+            transform: scale(1.2);
+        }
+
+        .modal h2 {
+            margin-bottom: 25px;
+            text-align: center;
+            font-size: 2rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+            font-family: 'Courier New', monospace;
+            color: #333;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .google-signin-btn {
+            width: 100%;
+            padding: 15px;
+            background: white;
+            color: #333;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .google-signin-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+        }
+
+        .story-card {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border-left: 4px solid #ff6b6b;
+            backdrop-filter: blur(5px);
+        }
+
+        .story-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .story-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            border: 2px solid #feca57;
+        }
+
+        .story-author {
+            font-weight: bold;
+            color: #feca57;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .story-date {
+            font-size: 0.9rem;
+            color: #ccc;
+            margin-left: auto;
+        }
+
+        .story-title {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: #fff;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .story-content {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #fff;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .no-stories {
+            text-align: center;
+            padding: 40px;
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 768px) {
+            .user-stories-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .auth-controls {
+                justify-content: center;
+            }
+        }
     </style>
 </head>
 <body>
@@ -345,13 +603,18 @@
                 </p>
             </div>
 
-            <div class="feature-card">
-                <div class="feature-icon">🎵</div>
-                <h3>Explore the Music</h3>
-                <p>
-                    Dive deep into the vast catalog of shows, songs, and improvisations that made the Grateful Dead legendary.
-                </p>
-            </div>
+            <a href="music.html" style="text-decoration: none; color: inherit;">
+                <div class="feature-card">
+                    <div class="feature-icon">🎵</div>
+                    <h3>Explore the Music</h3>
+                    <p>
+                        Dive deep into the vast catalog of shows, songs, and improvisations that made the Grateful Dead legendary.
+                    </p>
+                    <p style="margin-top: 15px; font-weight: bold; color: #feca57;">
+                        → Browse Notable Versions & Performances
+                    </p>
+                </div>
+            </a>
 
             <div class="feature-card">
                 <div class="feature-icon">🤖</div>
@@ -379,7 +642,7 @@
         </section>
 
         <div class="cta">
-            <a href="#" class="cta-button">Join the Family</a>
+            <a href="music.html" class="cta-button">Explore the Music</a>
         </div>
 
         <footer>
@@ -387,5 +650,446 @@
             <p>Made with love for the music and the community</p>
         </footer>
     </div>
+
+    <script>
+        // ========================================
+        // AI IMAGE GENERATION CONFIGURATION
+        // ========================================
+
+        // DEMO MODE: Set to false and add your API key below to enable real image generation
+        const DEMO_MODE = true;
+
+        // To use OpenAI DALL-E (recommended for beginners):
+        // 1. Sign up at https://platform.openai.com/
+        // 2. Get API key from https://platform.openai.com/api-keys
+        // 3. New accounts get $5 free credit
+        // 4. Set DEMO_MODE = false and add your key below
+        const OPENAI_API_KEY = '';  // Add your API key here
+
+        // ========================================
+        // IMAGE PROMPT GENERATION
+        // ========================================
+
+        /**
+         * Generates an intelligent AI image prompt from history content
+         * @param {Object} historyContent - The history data for today
+         * @returns {string} A detailed prompt for AI image generation
+         */
+        function generateImagePrompt(historyContent) {
+            // Extract key information
+            const title = historyContent.title;
+            const description = historyContent.description.join(' ');
+            const date = historyContent.date;
+
+            // Create a detailed, artistic prompt
+            const prompt = `A psychedelic art poster in the style of 1960s-70s rock concert posters, depicting ${title}.
+Include vibrant, swirling colors (purple, orange, blue, pink) with a vintage aesthetic.
+The scene should capture the energy and spirit of a Grateful Dead concert with dancing skeletons,
+roses, and cosmic elements. Retro typography and a dreamy, mystical atmosphere.
+Style: vintage concert poster art, psychedelic rock aesthetic, Grateful Dead imagery.
+Mood: groovy, nostalgic, cosmic, energetic. Date reference: ${date}.`;
+
+            return prompt.trim();
+        }
+
+        // ========================================
+        // IMAGE GENERATION (DEMO MODE & REAL API)
+        // ========================================
+
+        /**
+         * Generates or simulates generating an image based on the prompt
+         * @param {string} prompt - The image generation prompt
+         * @returns {Promise<Object>} Image data including URL and metadata
+         */
+        async function generateHistoryImage(prompt) {
+            if (DEMO_MODE) {
+                // DEMO MODE: Show what would be generated
+                return {
+                    success: true,
+                    mode: 'demo',
+                    prompt: prompt,
+                    message: 'Demo mode active - showing prompt preview'
+                };
+            }
+
+            // REAL API MODE: Generate actual image with OpenAI DALL-E
+            try {
+                if (!OPENAI_API_KEY || OPENAI_API_KEY === '') {
+                    throw new Error('API key not configured');
+                }
+
+                const response = await fetch('https://api.openai.com/v1/images/generations', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${OPENAI_API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        model: 'dall-e-3',
+                        prompt: prompt,
+                        n: 1,
+                        size: '1024x1024',
+                        quality: 'standard',
+                        style: 'vivid'
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API request failed: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                return {
+                    success: true,
+                    mode: 'real',
+                    imageUrl: data.data[0].url,
+                    prompt: prompt
+                };
+
+            } catch (error) {
+                console.error('Error generating image:', error);
+                return {
+                    success: false,
+                    mode: 'error',
+                    error: error.message,
+                    prompt: prompt
+                };
+            }
+        }
+
+        // ========================================
+        // DISPLAY GENERATED IMAGE
+        // ========================================
+
+        /**
+         * Displays the generated image or demo placeholder in the UI
+         * @param {Object} imageData - The image data from generateHistoryImage()
+         */
+        function displayGeneratedImage(imageData) {
+            const container = document.getElementById('ai-image-content');
+            const section = document.getElementById('ai-magic-section');
+
+            if (imageData.mode === 'demo') {
+                // DEMO MODE: Show prompt preview
+                container.innerHTML = `
+                    <div class="ai-placeholder">
+                        <div class="ai-placeholder-icon">🎨✨</div>
+                        <h4 style="margin-bottom: 15px; font-size: 1.5rem;">Demo Mode Active</h4>
+                        <p style="max-width: 600px; margin: 0 auto;">This is where your AI-generated image would appear!</p>
+                    </div>
+                    <div class="ai-prompt-display">
+                        <span class="ai-prompt-label">🤖 AI Prompt Generated:</span>
+                        <p style="margin: 0; color: #fff;">${imageData.prompt}</p>
+                    </div>
+                    <div class="ai-demo-notice">
+                        <strong>💡 How to enable real image generation:</strong><br>
+                        1. Sign up for OpenAI API at <a href="https://platform.openai.com/" target="_blank" style="color: #48dbfb;">platform.openai.com</a> (new accounts get $5 free credit)<br>
+                        2. Get your API key from the API keys section<br>
+                        3. Open <code>index.html</code> and set <code>DEMO_MODE = false</code><br>
+                        4. Add your API key to <code>OPENAI_API_KEY</code><br>
+                        5. Refresh the page to see real AI-generated images!
+                    </div>
+                `;
+            } else if (imageData.mode === 'real' && imageData.success) {
+                // REAL MODE: Show generated image
+                container.innerHTML = `
+                    <div class="ai-image-container">
+                        <img src="${imageData.imageUrl}" alt="AI-generated Grateful Dead artwork" class="ai-image">
+                    </div>
+                    <div class="ai-prompt-display">
+                        <span class="ai-prompt-label">🤖 Generated from prompt:</span>
+                        <p style="margin: 0; color: #fff;">${imageData.prompt}</p>
+                    </div>
+                `;
+            } else {
+                // ERROR MODE: Show error message
+                container.innerHTML = `
+                    <div class="ai-demo-notice">
+                        <strong>⚠️ Image generation failed:</strong><br>
+                        ${imageData.error || 'Unknown error occurred'}<br><br>
+                        Please check your API key configuration and try again.
+                    </div>
+                `;
+            }
+
+            // Show the AI magic section
+            section.style.display = 'block';
+        }
+
+        // ========================================
+        // LOAD TODAY'S HISTORY (UPDATED)
+        // ========================================
+
+        // Function to load and display today's Grateful Dead history
+        async function loadTodaysHistory() {
+            try {
+                // Get today's date in MM-DD format
+                const today = new Date();
+                const month = String(today.getMonth() + 1).padStart(2, '0');
+                const day = String(today.getDate()).padStart(2, '0');
+                currentDateKey = `${month}-${day}`;
+
+                // Fetch the history data
+                const response = await fetch('dead-history.json');
+                const historyData = await response.json();
+
+                // Get today's content or a random one if today doesn't exist
+                let todayContent = historyData[currentDateKey];
+
+                // If no content for today, pick a random date
+                if (!todayContent) {
+                    const allDates = Object.keys(historyData);
+                    const randomDate = allDates[Math.floor(Math.random() * allDates.length)];
+                    todayContent = historyData[randomDate];
+                    currentDateKey = randomDate;
+                }
+
+                // Update the date display
+                document.getElementById('history-date').textContent = `📅 ${todayContent.date}`;
+
+                // Build the description paragraphs
+                const descriptionHTML = todayContent.description
+                    .map(paragraph => `<p>${paragraph}</p>`)
+                    .join('');
+
+                // Build the complete feature HTML
+                const featureHTML = `
+                    <h3>${todayContent.icon} ${todayContent.title}</h3>
+                    ${descriptionHTML}
+                    <div class="history-why">
+                        <h4>✨ Why This ${todayContent.title.includes('Show') || todayContent.title.includes('October') || todayContent.title.includes('March') || todayContent.title.includes('June') ? 'Show' : 'Moment'}?</h4>
+                        <p>${todayContent.why}</p>
+                    </div>
+                `;
+
+                // Update the feature content
+                document.getElementById('history-feature').innerHTML = featureHTML;
+
+                // Generate and display AI image based on today's history
+                try {
+                    const imagePrompt = generateImagePrompt(todayContent);
+                    const imageData = await generateHistoryImage(imagePrompt);
+                    displayGeneratedImage(imageData);
+                } catch (imageError) {
+                    console.error('Error with AI image generation:', imageError);
+                    // Don't show error to user - just skip the image section
+                }
+
+            } catch (error) {
+                console.error('Error loading history:', error);
+                document.getElementById('history-feature').innerHTML = `
+                    <h3>🎸 Grateful Dead History</h3>
+                    <p>We're having trouble loading today's featured content. Please check back later!</p>
+                    <p>In the meantime, remember: "Once in a while you get shown the light in the strangest of places if you look at it right."</p>
+                `;
+            }
+        }
+
+        // Authentication State Observer
+        function initAuth() {
+            if (!auth) {
+                document.getElementById('auth-prompt').style.display = 'block';
+                document.getElementById('stories-container').innerHTML = '<div class="no-stories"><p>⚠️ Firebase not configured. Please add your Firebase credentials to enable user stories.</p></div>';
+                return;
+            }
+
+            auth.onAuthStateChanged((user) => {
+                currentUser = user;
+                if (user) {
+                    // User is signed in
+                    document.getElementById('user-info').style.display = 'flex';
+                    document.getElementById('auth-prompt').style.display = 'none';
+                    document.getElementById('user-name').textContent = user.displayName || 'Deadhead';
+                    document.getElementById('user-avatar').src = user.photoURL || 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"><circle cx="20" cy="20" r="20" fill="%23feca57"/><text x="20" y="28" text-anchor="middle" fill="white" font-size="20" font-family="Arial">☮</text></svg>';
+                    loadUserStories();
+                } else {
+                    // User is signed out
+                    document.getElementById('user-info').style.display = 'none';
+                    document.getElementById('auth-prompt').style.display = 'block';
+                    loadUserStories();
+                }
+            });
+        }
+
+        // Sign in with Google
+        function signInWithGoogle() {
+            if (!auth) {
+                alert('Firebase is not configured. Please add your Firebase credentials.');
+                return;
+            }
+            const provider = new firebase.auth.GoogleAuthProvider();
+            auth.signInWithPopup(provider)
+                .then((result) => {
+                    closeModal('auth-modal');
+                })
+                .catch((error) => {
+                    console.error('Sign in error:', error);
+                    alert('Sign in failed: ' + error.message);
+                });
+        }
+
+        // Sign out
+        function signOut() {
+            if (!auth) return;
+            auth.signOut().then(() => {
+                console.log('User signed out');
+            }).catch((error) => {
+                console.error('Sign out error:', error);
+            });
+        }
+
+        // Load user stories for today's date
+        async function loadUserStories() {
+            const container = document.getElementById('stories-container');
+
+            if (!db || !currentDateKey) {
+                container.innerHTML = '<div class="no-stories"><p>Loading stories...</p></div>';
+                return;
+            }
+
+            try {
+                const storiesRef = db.collection('stories');
+                const querySnapshot = await storiesRef
+                    .where('dateKey', '==', currentDateKey)
+                    .orderBy('createdAt', 'desc')
+                    .limit(50)
+                    .get();
+
+                if (querySnapshot.empty) {
+                    container.innerHTML = `
+                        <div class="no-stories">
+                            <p>🎵 No stories yet for this date in Grateful Dead history.</p>
+                            ${currentUser ? '<p>Be the first to share your story!</p>' : '<p>Sign in to be the first to share a story!</p>'}
+                        </div>
+                    `;
+                    return;
+                }
+
+                let storiesHTML = '';
+                querySnapshot.forEach((doc) => {
+                    const story = doc.data();
+                    const date = story.createdAt ? new Date(story.createdAt.toDate()).toLocaleDateString() : 'Unknown date';
+                    storiesHTML += `
+                        <div class="story-card">
+                            <div class="story-header">
+                                <img src="${story.userPhoto || 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="35" height="35"><circle cx="17.5" cy="17.5" r="17.5" fill="%23feca57"/><text x="17.5" y="24" text-anchor="middle" fill="white" font-size="18" font-family="Arial">☮</text></svg>'}" alt="${story.userName}" class="story-avatar">
+                                <span class="story-author">${story.userName || 'Anonymous Deadhead'}</span>
+                                <span class="story-date">${date}</span>
+                            </div>
+                            <h3 class="story-title">${escapeHtml(story.title)}</h3>
+                            <p class="story-content">${escapeHtml(story.content)}</p>
+                        </div>
+                    `;
+                });
+
+                container.innerHTML = storiesHTML;
+
+            } catch (error) {
+                console.error('Error loading stories:', error);
+                container.innerHTML = `
+                    <div class="no-stories">
+                        <p>⚠️ Error loading stories. ${error.message}</p>
+                        <p>Make sure Firestore is properly configured with the correct indexes.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Submit a new story
+        async function submitStory(event) {
+            event.preventDefault();
+
+            if (!currentUser) {
+                alert('Please sign in to share your story');
+                return;
+            }
+
+            if (!db || !currentDateKey) {
+                alert('Database not initialized');
+                return;
+            }
+
+            const title = document.getElementById('story-title').value.trim();
+            const content = document.getElementById('story-content').value.trim();
+
+            if (!title || !content) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            try {
+                await db.collection('stories').add({
+                    dateKey: currentDateKey,
+                    title: title,
+                    content: content,
+                    userId: currentUser.uid,
+                    userName: currentUser.displayName || 'Anonymous Deadhead',
+                    userPhoto: currentUser.photoURL || '',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                // Close modal and reset form
+                closeModal('story-modal');
+                document.getElementById('story-form').reset();
+
+                // Reload stories
+                loadUserStories();
+
+                alert('🎸 Story shared successfully!');
+
+            } catch (error) {
+                console.error('Error submitting story:', error);
+                alert('Failed to submit story: ' + error.message);
+            }
+        }
+
+        // Utility function to escape HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Modal functions
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load today's history
+            loadTodaysHistory();
+
+            // Initialize auth
+            initAuth();
+
+            // Modal close buttons
+            document.getElementById('auth-modal-close').addEventListener('click', () => closeModal('auth-modal'));
+            document.getElementById('story-modal-close').addEventListener('click', () => closeModal('story-modal'));
+
+            // Click outside modal to close
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        closeModal(modal.id);
+                    }
+                });
+            });
+
+            // Auth buttons
+            document.getElementById('signin-btn').addEventListener('click', () => openModal('auth-modal'));
+            document.getElementById('google-signin').addEventListener('click', signInWithGoogle);
+            document.getElementById('signout-btn').addEventListener('click', signOut);
+
+            // Story buttons
+            document.getElementById('add-story-btn').addEventListener('click', () => openModal('story-modal'));
+            document.getElementById('story-form').addEventListener('submit', submitStory);
+        });
+    </script>
 </body>
 </html>
