@@ -279,6 +279,117 @@
             line-height: 1.6;
         }
 
+        .ai-magic-section {
+            background: rgba(72, 219, 251, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+            border: 2px solid rgba(72, 219, 251, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ai-magic-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent,
+                rgba(72, 219, 251, 0.1),
+                transparent
+            );
+            animation: shimmer 4s infinite;
+        }
+
+        .ai-magic-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .ai-magic-section h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: #48dbfb;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .ai-image-container {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            text-align: center;
+        }
+
+        .ai-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+            margin: 15px 0;
+        }
+
+        .ai-placeholder {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            background-size: 200% 200%;
+            animation: gradientShift 8s ease infinite;
+            border-radius: 10px;
+            padding: 60px 20px;
+            margin: 15px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 300px;
+        }
+
+        .ai-placeholder-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .ai-prompt-display {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #48dbfb;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            text-align: left;
+        }
+
+        .ai-prompt-label {
+            color: #48dbfb;
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .ai-demo-notice {
+            background: rgba(254, 202, 87, 0.2);
+            padding: 12px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #feca57;
+            font-size: 0.9rem;
+        }
+
+        .ai-demo-notice strong {
+            color: #feca57;
+        }
+
+        .ai-loading {
+            display: inline-block;
+            animation: spin 2s linear infinite;
+        }
+
         @media (max-width: 768px) {
             .logo {
                 font-size: 2.5rem;
@@ -572,27 +683,83 @@
 
         <section class="history-section">
             <div class="history-content">
-                <p class="history-date">📅 October 28</p>
+                <p class="history-date" id="history-date">📅 Loading...</p>
                 <h2 class="history-title">On Today's Date in Grateful Dead History</h2>
 
-                <div class="history-feature">
-                    <h3>🎸 Cornell 5/8/77 - "Scarlet Begonias > Fire on the Mountain"</h3>
-                    <p>
-                        On May 8, 1977, at Barton Hall, Cornell University, the Grateful Dead delivered what many consider to be the greatest "Scarlet Begonias > Fire on the Mountain" transition ever performed. The seamless 26-minute journey showcases the band at their absolute peak.
-                    </p>
-                    <p>
-                        Jerry's guitar work is transcendent, weaving intricate melodies that dance between the songs. The transition is so smooth, you can barely tell where Scarlet ends and Fire begins. Phil's bass grounds the cosmic exploration while the dual drummers create a rhythmic foundation that propels the jam to unprecedented heights.
-                    </p>
+                <div class="history-feature" id="history-feature">
+                    <h3>🎸 Loading today's Grateful Dead history...</h3>
+                    <p>Please wait while we load today's featured content.</p>
+                </div>
 
-                    <div class="history-why">
-                        <h4>✨ Why This Performance?</h4>
-                        <p>
-                            The Cornell '77 show is often called the best Grateful Dead show ever, and this transition is the crown jewel. It represents everything magical about the Dead's improvisational prowess - the telepathic communication between band members, the perfect balance of structure and freedom, and the ability to take the audience on a transformative journey. This performance has inspired countless musicians and remains a pilgrimage destination for Deadheads exploring the band's vast catalog.
-                        </p>
+                <div class="ai-magic-section" id="ai-magic-section" style="display: none;">
+                    <div class="ai-magic-content">
+                        <h3>🤖 AI-Generated Image of the Day</h3>
+                        <div id="ai-image-content">
+                            <!-- AI-generated image will be inserted here -->
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
+
+        <!-- User Stories Section -->
+        <section class="user-stories-section">
+            <div class="user-stories-header">
+                <h2>🎸 Share Your Stories</h2>
+                <div class="auth-controls">
+                    <div id="user-info" class="user-info" style="display: none;">
+                        <img id="user-avatar" class="user-avatar" src="" alt="User avatar">
+                        <span id="user-name">Loading...</span>
+                        <button id="add-story-btn" class="btn btn-primary">Add Your Story</button>
+                        <button id="signout-btn" class="btn btn-secondary">Sign Out</button>
+                    </div>
+                    <div id="auth-prompt" style="display: none;">
+                        <button id="signin-btn" class="btn btn-primary">Sign In to Share</button>
+                    </div>
+                </div>
+            </div>
+            <div id="stories-container" class="loading">
+                <p>Loading stories...</p>
+            </div>
+        </section>
+
+        <!-- Authentication Modal -->
+        <div id="auth-modal" class="modal">
+            <div class="modal-content">
+                <span class="modal-close" id="auth-modal-close">&times;</span>
+                <h2>🎵 Join the Family</h2>
+                <p style="text-align: center; margin-bottom: 20px;">Sign in to share your Grateful Dead stories and experiences</p>
+                <button id="google-signin" class="google-signin-btn">
+                    <svg width="24" height="24" viewBox="0 0 24 24">
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                    </svg>
+                    Sign in with Google
+                </button>
+            </div>
+        </div>
+
+        <!-- Add Story Modal -->
+        <div id="story-modal" class="modal">
+            <div class="modal-content">
+                <span class="modal-close" id="story-modal-close">&times;</span>
+                <h2>✨ Share Your Story</h2>
+                <p style="text-align: center; margin-bottom: 20px;">Tell us about your experience related to today's Grateful Dead history</p>
+                <form id="story-form">
+                    <div class="form-group">
+                        <label for="story-title">Story Title</label>
+                        <input type="text" id="story-title" name="title" required maxlength="100" placeholder="e.g., I was there at Cornell '77!">
+                    </div>
+                    <div class="form-group">
+                        <label for="story-content">Your Story</label>
+                        <textarea id="story-content" name="content" required maxlength="1000" placeholder="Share your memories, experiences, or thoughts about this moment in Grateful Dead history..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Share Story</button>
+                </form>
+            </div>
+        </div>
 
         <section class="features">
             <div class="feature-card">
