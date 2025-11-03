@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="62a0b134-1048-4d36-839f-e036c9809061" name="Changes" comment="today in GD history" />
+    <list default="true" id="62a0b134-1048-4d36-839f-e036c9809061" name="Changes" comment="today in GD history">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -37,7 +39,7 @@
     "RunOnceActivity.git.unshallow": "true",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultAutoModeForALLUsers.v1": "true",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "claude/session-011CUaD5uN3EsRq6Eup6kXts",
     "junie.onboarding.icon.badge.shown": "true",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -80,6 +82,7 @@
       <workItem from="1761685391085" duration="203000" />
       <workItem from="1761685598767" duration="2184000" />
       <workItem from="1761742697299" duration="920000" />
+      <workItem from="1761858113654" duration="1545000" />
     </task>
     <task id="LOCAL-00001" summary="today in GD history">
       <option name="closed" value="true" />

@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explore the Music - Grateful for the Dead</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            color: #fff;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px 30px;
+        }
+
+        .logo {
+            font-size: 3rem;
+            font-weight: bold;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+            background: linear-gradient(45deg, #ff6b6b, #feca57, #48dbfb, #ff9ff3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            margin-top: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            font-style: italic;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin: 20px 0;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .back-link:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateX(-5px);
+        }
+
+        .search-section {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 15px 20px;
+            font-size: 1.2rem;
+            font-family: 'Courier New', monospace;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-box:focus {
+            border-color: #feca57;
+            box-shadow: 0 0 20px rgba(254, 202, 87, 0.5);
+        }
+
+        .search-box::placeholder {
+            color: #666;
+        }
+
+        .info-box {
+            background: rgba(254, 202, 87, 0.2);
+            border-left: 4px solid #feca57;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .info-box h3 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: #feca57;
+        }
+
+        .info-box p {
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .songs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .song-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .song-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .song-title {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            color: #feca57;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .song-meta {
+            font-size: 0.9rem;
+            color: #fff;
+            opacity: 0.9;
+            margin-bottom: 15px;
+        }
+
+        .song-description {
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            opacity: 0.95;
+        }
+
+        .versions-header {
+            font-size: 1.3rem;
+            margin: 20px 0 15px 0;
+            color: #48dbfb;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            border-bottom: 2px solid rgba(72, 219, 251, 0.5);
+            padding-bottom: 10px;
+        }
+
+        .version-item {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #ff6b6b;
+        }
+
+        .version-date {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #ff9ff3;
+            margin-bottom: 5px;
+        }
+
+        .version-venue {
+            font-size: 1rem;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .version-details {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+
+        .version-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            background: rgba(254, 202, 87, 0.3);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            border: 1px solid rgba(254, 202, 87, 0.5);
+        }
+
+        .version-notes {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin: 10px 0;
+            font-style: italic;
+            opacity: 0.9;
+        }
+
+        .links-section {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .links-title {
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            opacity: 0.8;
+            font-weight: bold;
+        }
+
+        .link-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .link-button {
+            display: inline-block;
+            padding: 8px 15px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            font-weight: bold;
+        }
+
+        .link-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .link-button.deadnet {
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+        }
+
+        .link-button.spotify {
+            background: linear-gradient(45deg, #1DB954, #1ed760);
+        }
+
+        .link-button.apple {
+            background: linear-gradient(45deg, #fc3c44, #fa233b);
+        }
+
+        .link-button.archive {
+            background: linear-gradient(45deg, #48dbfb, #00d2ff);
+        }
+
+        .link-button.youtube {
+            background: linear-gradient(45deg, #FF0000, #cc0000);
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            margin: 40px 0;
+        }
+
+        .no-results h3 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            font-size: 1rem;
+            opacity: 0.8;
+            margin-top: 60px;
+        }
+
+        @media (max-width: 768px) {
+            .songs-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .logo {
+                font-size: 2rem;
+            }
+
+            .subtitle {
+                font-size: 1.2rem;
+            }
+
+            .version-details {
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="logo">🎵 Explore the Music 🎵</h1>
+            <p class="subtitle">Notable Versions & Performances</p>
+        </header>
+
+        <a href="index.html" class="back-link">← Back to Home</a>
+
+        <div class="search-section">
+            <input
+                type="text"
+                id="searchBox"
+                class="search-box"
+                placeholder="Search for songs... (e.g., 'Dark Star', 'Cornell', '1977')"
+            >
+        </div>
+
+        <div class="info-box">
+            <h3>💿 Official Releases & Streaming</h3>
+            <p>
+                Each version includes links to official Dead.net releases, streaming platforms (Spotify, Apple Music),
+                and the Internet Archive for live recordings. Support the music through official channels while
+                exploring the vast catalog of live performances that make the Grateful Dead legendary.
+            </p>
+        </div>
+
+        <div id="songsContainer" class="songs-grid">
+            <!-- Songs will be loaded here by JavaScript -->
+        </div>
+
+        <div id="noResults" class="no-results" style="display: none;">
+            <h3>🎸 No matching songs found</h3>
+            <p>Try a different search term or browse all available songs</p>
+        </div>
+
+        <footer>
+            <p>⚡ What a long, strange trip it's been ⚡</p>
+            <p>Music never stops - explore these legendary performances</p>
+        </footer>
+    </div>
+
+    <script>
+        let songsData = {};
+
+        // Load songs data
+        async function loadSongs() {
+            try {
+                const response = await fetch('songs.json');
+                songsData = await response.json();
+                displaySongs(songsData);
+            } catch (error) {
+                console.error('Error loading songs:', error);
+                document.getElementById('songsContainer').innerHTML = `
+                    <div class="no-results" style="display: block;">
+                        <h3>Error loading songs</h3>
+                        <p>We're having trouble loading the song catalog. Please try again later.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Display songs
+        function displaySongs(songs) {
+            const container = document.getElementById('songsContainer');
+            const noResults = document.getElementById('noResults');
+
+            const songEntries = Object.entries(songs);
+
+            if (songEntries.length === 0) {
+                container.style.display = 'none';
+                noResults.style.display = 'block';
+                return;
+            }
+
+            container.style.display = 'grid';
+            noResults.style.display = 'none';
+
+            container.innerHTML = songEntries.map(([key, song]) => {
+                const versionsHTML = song.versions.map(version => `
+                    <div class="version-item">
+                        <div class="version-date">📅 ${formatDate(version.date)}</div>
+                        <div class="version-venue">📍 ${version.venue}</div>
+                        <div class="version-details">
+                            <span class="version-badge">⏱️ ${version.duration}</span>
+                            <span class="version-badge">⭐ ${version.rating}</span>
+                        </div>
+                        <div class="version-notes">${version.notes}</div>
+                        <div class="links-section">
+                            <div class="links-title">🔗 Listen & Purchase:</div>
+                            <div class="link-buttons">
+                                <a href="${version.links.deadnet}" target="_blank" class="link-button deadnet">Dead.net</a>
+                                <a href="${version.links.spotify}" target="_blank" class="link-button spotify">Spotify</a>
+                                <a href="${version.links.appleMusic}" target="_blank" class="link-button apple">Apple Music</a>
+                                <a href="${version.links.archive}" target="_blank" class="link-button archive">Archive.org</a>
+                                <a href="${version.links.youtube}" target="_blank" class="link-button youtube">YouTube</a>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="song-card" data-song-id="${key}">
+                        <h2 class="song-title">${song.title}</h2>
+                        <div class="song-meta">
+                            ✍️ Written by: ${song.writers.join(', ')} | 🎭 Debuted: ${formatDate(song.debuted)}
+                        </div>
+                        <p class="song-description">${song.description}</p>
+                        <h3 class="versions-header">🎸 Notable Versions (${song.versions.length})</h3>
+                        ${versionsHTML}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Format date from YYYY-MM-DD to readable format
+        function formatDate(dateStr) {
+            const date = new Date(dateStr + 'T00:00:00');
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        // Search functionality
+        function searchSongs(query) {
+            if (!query.trim()) {
+                displaySongs(songsData);
+                return;
+            }
+
+            query = query.toLowerCase();
+
+            const filteredSongs = Object.entries(songsData).reduce((acc, [key, song]) => {
+                // Search in song title
+                const titleMatch = song.title.toLowerCase().includes(query);
+
+                // Search in description
+                const descriptionMatch = song.description.toLowerCase().includes(query);
+
+                // Search in versions (venue, date, notes)
+                const versionMatch = song.versions.some(version =>
+                    version.venue.toLowerCase().includes(query) ||
+                    version.date.includes(query) ||
+                    version.notes.toLowerCase().includes(query) ||
+                    version.rating.toLowerCase().includes(query)
+                );
+
+                // Search in writers
+                const writerMatch = song.writers.some(writer =>
+                    writer.toLowerCase().includes(query)
+                );
+
+                if (titleMatch || descriptionMatch || versionMatch || writerMatch) {
+                    acc[key] = song;
+                }
+
+                return acc;
+            }, {});
+
+            displaySongs(filteredSongs);
+        }
+
+        // Event listeners
+        document.getElementById('searchBox').addEventListener('input', (e) => {
+            searchSongs(e.target.value);
+        });
+
+        // Load songs when page loads
+        document.addEventListener('DOMContentLoaded', loadSongs);
+    </script>
+</body>
+</html>
