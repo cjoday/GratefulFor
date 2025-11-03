@@ -679,17 +679,27 @@ Mood: groovy, nostalgic, cosmic, energetic. Date reference: ${date}.`;
                 const response = await fetch('dead-history.json');
                 const historyData = await response.json();
 
-                // Get today's content or a random one if today doesn't exist
-                let todayContent = historyData[dateKey];
+                // Get today's content - ONLY show if it exists for today's date
+                const todayContent = historyData[dateKey];
 
-                // If no content for today, pick a random date
                 if (!todayContent) {
-                    const allDates = Object.keys(historyData);
-                    const randomDate = allDates[Math.floor(Math.random() * allDates.length)];
-                    todayContent = historyData[randomDate];
+                    // No content for today - show a friendly message
+                    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                                      'July', 'August', 'September', 'October', 'November', 'December'];
+                    const todayFormatted = `${monthNames[today.getMonth()]} ${today.getDate()}`;
+
+                    document.getElementById('history-date').textContent = `📅 ${todayFormatted}`;
+                    document.getElementById('history-feature').innerHTML = `
+                        <h3>🎸 No Featured History Today</h3>
+                        <p>There's no Grateful Dead history entry for ${todayFormatted} yet, but the music never stopped!</p>
+                        <p style="margin-top: 20px; font-style: italic;">"The music never stopped... it's just waiting for the right moment to begin again."</p>
+                        <p style="margin-top: 15px;">Check back tomorrow for another moment in Grateful Dead history.</p>
+                    `;
+                    // Don't show AI image section if there's no content
+                    return;
                 }
 
-                // Update the date display
+                // Update the date display with the actual content date
                 document.getElementById('history-date').textContent = `📅 ${todayContent.date}`;
 
                 // Build the description paragraphs
