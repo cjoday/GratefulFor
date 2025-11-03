@@ -390,6 +390,62 @@
             animation: spin 2s linear infinite;
         }
 
+        .hunters-corner {
+            background: rgba(254, 202, 87, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 25px 0;
+            border: 2px solid rgba(254, 202, 87, 0.4);
+            border-left: 5px solid #feca57;
+            position: relative;
+        }
+
+        .hunters-corner-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            gap: 10px;
+        }
+
+        .hunters-corner-icon {
+            font-size: 1.8rem;
+        }
+
+        .hunters-corner-title {
+            font-size: 1.4rem;
+            color: #feca57;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            margin: 0;
+        }
+
+        .hunters-corner-content {
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: #fff;
+            font-style: italic;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
+        }
+
+        .hunters-corner-content::before {
+            content: '"';
+            font-size: 2rem;
+            color: #feca57;
+            font-weight: bold;
+            margin-right: 5px;
+            vertical-align: -5px;
+        }
+
+        .hunters-corner-content::after {
+            content: '"';
+            font-size: 2rem;
+            color: #feca57;
+            font-weight: bold;
+            margin-left: 5px;
+            vertical-align: -5px;
+        }
+
         @media (max-width: 768px) {
             .logo {
                 font-size: 2.5rem;
@@ -1004,7 +1060,6 @@ Mood: groovy, nostalgic, cosmic, energetic. Date reference: ${date}.`;
                 // Get today's content or a random one if today doesn't exist
                 let todayContent = historyData[currentDateKey];
 
-                // If no content for today, pick a random date
                 if (!todayContent) {
                     const allDates = Object.keys(historyData);
                     const randomDate = allDates[Math.floor(Math.random() * allDates.length)];
@@ -1012,13 +1067,26 @@ Mood: groovy, nostalgic, cosmic, energetic. Date reference: ${date}.`;
                     currentDateKey = randomDate;
                 }
 
-                // Update the date display
+                // Update the date display with the actual content date
                 document.getElementById('history-date').textContent = `📅 ${todayContent.date}`;
 
                 // Build the description paragraphs
                 const descriptionHTML = todayContent.description
                     .map(paragraph => `<p>${paragraph}</p>`)
                     .join('');
+
+                // Build Hunter's Corner HTML if content exists
+                const huntersCornerHTML = todayContent.huntersCorner ? `
+                    <div class="hunters-corner">
+                        <div class="hunters-corner-header">
+                            <span class="hunters-corner-icon">✍️</span>
+                            <h4 class="hunters-corner-title">Hunter's Corner</h4>
+                        </div>
+                        <div class="hunters-corner-content">
+                            ${todayContent.huntersCorner}
+                        </div>
+                    </div>
+                ` : '';
 
                 // Build the complete feature HTML
                 const featureHTML = `
@@ -1028,6 +1096,7 @@ Mood: groovy, nostalgic, cosmic, energetic. Date reference: ${date}.`;
                         <h4>✨ Why This ${todayContent.title.includes('Show') || todayContent.title.includes('October') || todayContent.title.includes('March') || todayContent.title.includes('June') ? 'Show' : 'Moment'}?</h4>
                         <p>${todayContent.why}</p>
                     </div>
+                    ${huntersCornerHTML}
                 `;
 
                 // Update the feature content
