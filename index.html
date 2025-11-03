@@ -1001,15 +1001,18 @@ Mood: groovy, nostalgic, cosmic, energetic. Date reference: ${date}.`;
                 const response = await fetch('dead-history.json');
                 const historyData = await response.json();
 
-                // Get today's content or a random one if today doesn't exist
+                // Get today's content
                 let todayContent = historyData[currentDateKey];
 
-                // If no content for today, pick a random date
+                // If no content for today, show a message
                 if (!todayContent) {
-                    const allDates = Object.keys(historyData);
-                    const randomDate = allDates[Math.floor(Math.random() * allDates.length)];
-                    todayContent = historyData[randomDate];
-                    currentDateKey = randomDate;
+                    document.getElementById('history-date').textContent = `📅 ${new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}`;
+                    document.getElementById('history-feature').innerHTML = `
+                        <h3>🎸 No Grateful Dead History for Today</h3>
+                        <p>We don't have a specific Grateful Dead story for this date yet. Check back tomorrow for another moment in Dead history!</p>
+                        <p style="margin-top: 20px; font-style: italic;">"Once in a while you get shown the light in the strangest of places if you look at it right." - Robert Hunter</p>
+                    `;
+                    return;
                 }
 
                 // Update the date display
